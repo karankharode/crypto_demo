@@ -13,6 +13,14 @@ import 'package:provider/provider.dart';
 import 'modules/home_screen/views/home_screen.dart';
 import 'utils/constants.dart';
 
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+  }
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
@@ -20,6 +28,7 @@ Future<void> main() async {
       statusBarBrightness: Brightness.dark,
     ),
   );
+  HttpOverrides.global = MyHttpOverrides();
   Directory directory = await pathProvider.getApplicationDocumentsDirectory();
   Hive.init(directory.path);
   Hive.registerAdapter(HiveCoinMODELAdapter());

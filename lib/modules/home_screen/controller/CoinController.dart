@@ -16,7 +16,7 @@ class CoinController with ChangeNotifier {
     var request = http.Request(
         'GET',
         Uri.parse(
-            'https://api.nomics.com/v1/currencies/ticker?key=11af86b8ec8ce0ce8884d3da9d33fb18817cbe89&interval=1d,30d&convert=EUR&platform-currency=ETH&per-page=10&page=1'));
+            'https://api.nomics.com/v1/currencies/ticker?key=321d922c30373117be40aa872b19b63f8e53a5a4&interval=1d,30d&convert=EUR&platform-currency=ETH&per-page=10&page=1'));
 
     var response = await request.send();
     if (response.statusCode == 200) {

@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     coinController = Provider.of<CoinController>(context, listen: false);
-    coinController.refreshData();
+    // coinController.refreshData();
     getCoins();
   }
 
@@ -72,9 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   getCoins() async {
-    if (_connectionStatus != ConnectivityResult.none) {
-      coinController.refreshData();
-    }
+    // if (_connectionStatus != ConnectivityResult.none) {
+    //   coinController.refreshData();
+    // }
     await coinController.getData();
     debugPrint(coinController.coinList.toString());
   }
@@ -169,17 +169,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onLoading() async {
     // monitor network fetch
-    if (_connectionStatus != ConnectivityResult.none) {
-      try {
-        await coinController.refreshData();
-        _refreshController.loadComplete();
-      } catch (e) {
-        coinController.getData();
-        _refreshController.loadComplete();
-      }
-    } else {
-      _refreshController.loadFailed();
-    }
+    // if (_connectionStatus != ConnectivityResult.none) {
+    //   try {
+    //     await coinController.refreshData();
+    //     _refreshController.loadComplete();
+    //   } catch (e) {
+    //     coinController.getData();
+    //     _refreshController.loadComplete();
+    //   }
+    // } else {
+    //   _refreshController.loadFailed();
+    // }
   }
 
   @override
@@ -200,39 +200,32 @@ class _HomeScreenState extends State<HomeScreen> {
                 blendMode: BlendMode.dstATop,
                 child: Consumer<CoinController>(builder: (context, coinProvider, child) {
                   debugPrint(coinProvider.cached.toString());
-                  return SmartRefresher(
-                      enablePullDown: true,
-                      enablePullUp: false,
-                      header: const WaterDropHeader(),
-                      controller: _refreshController,
-                      onRefresh: _onRefresh,
-                      onLoading: _onLoading,
-                      child: ListView(
-                        padding: const EdgeInsets.only(top: 64, bottom: 24),
-                        children: [
-                          header(),
-                          (_connectionStatus != ConnectivityResult.none)
-                              ? Container()
-                              : Column(
-                                  children: const [
-                                    SizedBox(height: 26),
-                                    ConnectionCard(),
-                                  ],
-                                ),
-                          const SizedBox(height: 16),
-                          (!coinProvider.cached)
-                              ? SizedBox(
-                                  height: MediaQuery.of(context).size.height / 1.5,
-                                  child: Center(
-                                    child: Lottie.asset('assets/animation/searching.json',
-                                        height: 150, width: 150),
-                                  ),
-                                )
-                              : CoinsListWidget(
-                                  coinProvider: coinProvider,
-                                ),
-                        ],
-                      ));
+                  return ListView(
+                    padding: const EdgeInsets.only(top: 64, bottom: 24),
+                    children: [
+                      header(),
+                      (_connectionStatus != ConnectivityResult.none)
+                          ? Container()
+                          : Column(
+                              children: const [
+                                SizedBox(height: 26),
+                                ConnectionCard(),
+                              ],
+                            ),
+                      const SizedBox(height: 16),
+                      (!coinProvider.cached)
+                          ? SizedBox(
+                              height: MediaQuery.of(context).size.height / 1.5,
+                              child: Center(
+                                child: Lottie.asset('assets/animation/searching.json',
+                                    height: 150, width: 150),
+                              ),
+                            )
+                          : CoinsListWidget(
+                              coinProvider: coinProvider,
+                            ),
+                    ],
+                  );
                 })),
           ),
           Align(
